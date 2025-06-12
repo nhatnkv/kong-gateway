@@ -38,3 +38,9 @@ plugins:
     policy: redis
     redis_host: 127.0.0.1
     redis_port: 6379
+
+- name: ip-restriction
+  service: kong-apigateway
+  config:
+    allow:
+    - 127.0.0.1
