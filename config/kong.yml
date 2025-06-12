@@ -30,3 +30,11 @@ plugins:
     - X-Auth-Token
     credentials: true
     max_age: 3600
+
+- name: rate-limiting
+  service: kong-apigateway
+  config:
+    second: 5
+    policy: redis
+    redis_host: 127.0.0.1
+    redis_port: 6379

@@ -21,3 +21,11 @@ services:
       - "127.0.0.1:7990:8001/tcp"
     volumes:
       - ./config:/usr/local/kong/declarative
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./:/bitnami
