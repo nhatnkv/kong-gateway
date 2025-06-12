@@ -49,5 +49,19 @@ plugins:
   service: kong-apigateway
   config:
     deny:
-    - 'Mozilla'
+    - curl
 
+- name: proxy-cache
+  service: kong-apigateway
+  config:
+    response_code:
+    - 200
+    request_method:
+    - GET
+    - HEAD
+    content_type:
+    - text/plain
+    - application/json
+    - text/html; charset=utf-8
+    cache_ttl: 60
+    strategy: memory
