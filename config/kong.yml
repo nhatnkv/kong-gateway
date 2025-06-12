@@ -44,3 +44,10 @@ plugins:
   config:
     allow:
     - 127.0.0.1
+
+- name: bot-detection
+  service: kong-apigateway
+  config:
+    deny:
+    - 'Mozilla'
+
