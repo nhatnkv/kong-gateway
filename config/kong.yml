@@ -1,7 +1,7 @@
 _format_version: "2.1"
 
 services:
-  - name: kong-apigateway
+  - name: server
     url: http://127.0.0.1:3000
     routes:
       - name: rails-app
@@ -10,58 +10,71 @@ services:
         strip_path: true
 
 plugins:
-- name: cors
-  service: kong-apigateway
-  config:
-    origins:
-    - "*"
-    methods:
-    - GET
-    - POST
-    headers:
-    - Accept
-    - Accept-Version
-    - Content-Length
-    - Content-MD5
-    - Content-Type
-    - Date
-    - X-Auth-Token
-    exposed_headers:
-    - X-Auth-Token
-    credentials: true
-    max_age: 3600
+  - name: cors
+    service: server
+    config:
+      origins:
+      - "*"
+      methods:
+      - GET
+      - POST
+      headers:
+      - Accept
+      - Accept-Version
+      - Content-Length
+      - Content-MD5
+      - Content-Type
+      - Date
+      - X-Auth-Token
+      exposed_headers:
+      - X-Auth-Token
+      credentials: true
+      max_age: 3600
 
-- name: rate-limiting
-  service: kong-apigateway
-  config:
-    second: 5
-    policy: redis
-    redis_host: 127.0.0.1
-    redis_port: 6379
+  - name: rate-limiting
+    service: server
+    config:
+      hour: 5
+      policy: redis
+      redis_host: 127.0.0.1
+      redis_port: 6379
 
-- name: ip-restriction
-  service: kong-apigateway
-  config:
-    allow:
-    - 127.0.0.1
+  - name: ip-restriction
+    service: server
+    config:
+      allow:
+      - 127.0.0.1
 
-- name: bot-detection
-  service: kong-apigateway
-  config:
-    deny:
-    - curl
+  - name: bot-detection
+    service: server
+    config:
+      deny:
+      - curl
 
-- name: proxy-cache
-  service: kong-apigateway
-  config:
-    response_code:
-    - 200
-    request_method:
-    - GET
-    - HEAD
-    content_type:
-    - text/plain
-    - application/json
-    - text/html; charset=utf-8
-    cache_ttl: 60
-    strategy: memory
+  - name: proxy-cache
+    service: server
+    config:
+      response_code:
+      - 200
+      request_method:
+      - GET
+      - HEAD
+      content_type:
+      - text/plain
+      - application/json
+      - text/html; charset=utf-8
+      cache_ttl: 60
+      strategy: memory
+  - name: jwt
+    service: server
+    config:
+      claims_to_verify:
+      - exp
+      key_claim_name: iss
+
+consumers:
+  - username: api-client
+jwt_secrets:
+  - consumer: api-client
+    key: api-client
+    secret: ""

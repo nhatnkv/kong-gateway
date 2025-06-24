@@ -322,5 +322,6 @@ Devise.setup do |config|
       ['DELETE', %r{^/logout$}]
     ]
     jwt.expiration_time = 30.minutes.to_i
-end
+    jwt.issuer = 'api-client'
+  end
 end
